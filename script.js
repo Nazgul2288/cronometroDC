@@ -24,11 +24,36 @@ function update() {
         anni--;
     }
 
+    // Calcolo minuti, secondi e decimi
+    let minuti = now.getMinutes() - start.getMinutes();
+    let secondi = now.getSeconds() - start.getSeconds();
+    let decimi = Math.floor((now.getMilliseconds() - start.getMilliseconds()) / 100);
+
+    if (decimi < 0) {
+        decimi += 10;
+        secondi--;
+    }
+
+    if (secondi < 0) {
+        secondi += 60;
+        minuti--;
+    }
+
+    if (minuti < 0) {
+        minuti += 60;
+        ore--;
+    }
+
+    // Aggiorna il DOM
     document.getElementById('anni').textContent = anni;
     document.getElementById('mesi').textContent = mesi;
     document.getElementById('giorni').textContent = giorni;
     document.getElementById('ore').textContent = ore;
+    document.getElementById('minuti').textContent = minuti;
+    document.getElementById('secondi').textContent = secondi;
+    document.getElementById('decimi').textContent = decimi;
 }
 
+// Avvio
 update();
-setInterval(update, 1000);
+setInterval(update, 100); // ogni 100ms per aggiornare i decimi
