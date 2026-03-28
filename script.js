@@ -2,46 +2,35 @@ const start = new Date('1975-04-05T00:00:00');
 
 function update() {
     const now = new Date();
+    let diffMs = now - start; // differenza totale in millisecondi
 
-    let anni = now.getFullYear() - start.getFullYear();
-    let mesi = now.getMonth() - start.getMonth();
-    let giorni = now.getDate() - start.getDate();
-    let ore = now.getHours() - start.getHours();
+    // Calcolo decimi di secondo
+    const decimi = Math.floor((diffMs % 1000) / 100);
 
-    if (ore < 0) {
-        ore += 24;
-        giorni--;
+    // Calcolo secondi
+    const secondiTot = Math.floor(diffMs / 1000);
+    const secondi = secondiTot % 60;
+
+    // Calcolo minuti
+    const minutiTot = Math.floor(secondiTot / 60);
+    const minuti = minutiTot % 60;
+
+    // Calcolo ore
+    const oreTot = Math.floor(minutiTot / 60);
+    const ore = oreTot % 24;
+
+    // Calcolo giorni
+    const giorniTot = Math.floor(oreTot / 24);
+
+    // Ora calcoliamo anni e mesi approssimando i mesi a 30 giorni
+    let anni = 0, mesi = 0, giorni = giorniTot;
+    while (giorni >= 365) {
+        anni++;
+        giorni -= 365;
     }
-
-    if (giorni < 0) {
-        const mesePrec = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
-        giorni += mesePrec;
-        mesi--;
-    }
-
-    if (mesi < 0) {
-        mesi += 12;
-        anni--;
-    }
-
-    // Calcolo minuti, secondi e decimi
-    let minuti = now.getMinutes() - start.getMinutes();
-    let secondi = now.getSeconds() - start.getSeconds();
-    let decimi = Math.floor((now.getMilliseconds() - start.getMilliseconds()) / 100);
-
-    if (decimi < 0) {
-        decimi += 10;
-        secondi--;
-    }
-
-    if (secondi < 0) {
-        secondi += 60;
-        minuti--;
-    }
-
-    if (minuti < 0) {
-        minuti += 60;
-        ore--;
+    while (giorni >= 30) {
+        mesi++;
+        giorni -= 30;
     }
 
     // Aggiorna il DOM
