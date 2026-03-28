@@ -1,40 +1,59 @@
-<!DOCTYPE html>
-<html lang="it">
+const start = new Date('1975-04-05T00:00:00');
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Quanto tempo ha vissuto DC?</title>
-</head>
+function update() {
+    const now = new Date();
 
-<body>
-    <div class="card">
-        <h2 id="title">Quanto tempo ha vissuto DC?</h2>
-        <table>
-            <tr>
-                <th>Anni</th>
-                <th>Mesi</th>
-                <th>Giorni</th>
-                <th>Ore</th>
-                <th>Minuti</th>
-                <th>Secondi</th>
-                <th>Decimi</th>
-            </tr>
-            <tr>
-                <td id="anni">-</td>
-                <td id="mesi">-</td>
-                <td id="giorni">-</td>
-                <td id="ore">-</td>
-                <td id="minuti">-</td>
-                <td id="secondi">-</td>
-                <td id="decimi">-</td>
-            </tr>
-        </table>
-        <span id="info">Sabato 5 aprile 1975</span>
-    </div>
+    let anni = now.getFullYear() - start.getFullYear();
+    let mesi = now.getMonth() - start.getMonth();
+    let giorni = now.getDate() - start.getDate();
+    let ore = now.getHours() - start.getHours();
 
-    <script src="script.js"></script>
-</body>
+    if (ore < 0) {
+        ore += 24;
+        giorni--;
+    }
 
-</html>
+    if (giorni < 0) {
+        const mesePrec = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+        giorni += mesePrec;
+        mesi--;
+    }
+
+    if (mesi < 0) {
+        mesi += 12;
+        anni--;
+    }
+
+    // Calcolo minuti, secondi e decimi
+    let minuti = now.getMinutes() - start.getMinutes();
+    let secondi = now.getSeconds() - start.getSeconds();
+    let decimi = Math.floor((now.getMilliseconds() - start.getMilliseconds()) / 100);
+
+    if (decimi < 0) {
+        decimi += 10;
+        secondi--;
+    }
+
+    if (secondi < 0) {
+        secondi += 60;
+        minuti--;
+    }
+
+    if (minuti < 0) {
+        minuti += 60;
+        ore--;
+    }
+
+    // Aggiorna il DOM
+    document.getElementById('anni').textContent = anni;
+    document.getElementById('mesi').textContent = mesi;
+    document.getElementById('giorni').textContent = giorni;
+    document.getElementById('ore').textContent = ore;
+    document.getElementById('minuti').textContent = minuti;
+    document.getElementById('secondi').textContent = secondi;
+    document.getElementById('decimi').textContent = decimi;
+}
+
+// Avvio cronometro
+update();
+setInterval(update, 100); // aggiorna ogni 100ms per i decimi
